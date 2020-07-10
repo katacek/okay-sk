@@ -7,12 +7,10 @@ const { utils: { log } } = Apify;
 Apify.main(async () => {
     //const { startUrls } = await Apify.getInput();
 
-    //const requestList = await Apify.openRequestList('start-urls', startUrls);
     const requestQueue = await Apify.openRequestQueue();
     await requestQueue.addRequest({ url: "https://www.okay.sk/" });
 
     const crawler = new Apify.CheerioCrawler({
-       // requestList,
         requestQueue,
         useApifyProxy: true,
         useSessionPool: true,
