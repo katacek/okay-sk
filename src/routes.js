@@ -64,7 +64,7 @@ exports.handleDetail = async ({ request, $ }) => {
     {
         additionalDiscount = parseFloat(additionalDiscount.replace('ZĽAVA','').trim());
         if (additionalDiscount)
-            result.currentPrice = result.currentPrice * ((100 - additionalDiscount) / 100);
+            result.currentPrice = Math.round(result.currentPrice * ((100 - additionalDiscount) / 100)* 100) / 100;
     }
     if (!result.originalPrice) result.originalPrice = result.currentPrice;
     result.discounted = result.currentPrice < result.originalPrice;
