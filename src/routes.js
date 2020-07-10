@@ -57,8 +57,8 @@ exports.handleDetail = async ({ request, $ }) => {
     result.itemUrl = request.url;
     result.itemId = productDescription.id;
     result.itemName = $('.product-title.js-productTitle').text().trim();
-    result.currentPrice = parseFloat($('#product_price_wv').text().replace(',', '.'));
-    result.originalPrice = parseFloat($('#product_price_recomended').text().replace(',', '.'));
+    result.currentPrice = parseFloat($('#product_price_wv').text().replace(/\s/g, '').replace(',', '.'));
+    result.originalPrice = parseFloat($('#product_price_recomended').text().replace(/\s/g, '').replace(',', '.'));
     let additionalDiscount = productDescription.labels.find(x => x.includes('ZĽAVA'));
     if (additionalDiscount)
     {
