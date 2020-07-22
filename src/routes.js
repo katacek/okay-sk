@@ -1,18 +1,12 @@
 const Apify = require('apify');
 
-//const { utils: { log } } = Apify;
-
-// at this point, the main page is already loaded in $
 exports.handleStart = async ({ $ }) =>
 {
     const requestQueue = await Apify.openRequestQueue();
-    //start page, add all categories links to requestQueue
     const links = $('ul.box-menu__line').find('li.box-menu__item:not(.box-menu__item--title)').find('a.box-menu__item__link').map(function ()
     { return $(this).attr('href'); }).get();
     for (let link of links)
     {   
-        // request is an object, setting url to link and in userdata, setting new dictionary label: LIST
-        // it is me who is setting the label value, just using it for making the crawler fcn more clear
         await requestQueue.addRequest({
             url: link,
             userData: { label: 'LIST' }
@@ -24,7 +18,6 @@ exports.handleStart = async ({ $ }) =>
 exports.handleList = async ({ $ }) =>
 {
     const requestQueue = await Apify.openRequestQueue();
-    //add detail pages of all products on the page to requestQueue
     const links = $('li.js-gtm-product-wrapper').find('.title').find('a.js-gtm-product-link').map(function ()
     { return $(this).attr('href'); }).get();
     for (let link of links)
@@ -35,7 +28,6 @@ exports.handleList = async ({ $ }) =>
         });
     }
 
-    //add next page to requestQueue, if exists
     const nextLink = $('a.next').attr('href');
     if (nextLink)
     {
@@ -48,7 +40,6 @@ exports.handleList = async ({ $ }) =>
 };
 
 exports.handleDetail = async ({ request, $ }) => {
-    //parse detail page
 
     let productDescription = JSON.parse($('div#page-product-detail').children().first().attr('data-product'));
 
@@ -72,6 +63,7 @@ exports.handleDetail = async ({ request, $ }) => {
     result.currency = "EUR";
     result.inStock = !!$('p#availability:contains(kus)').text();
     result.img = $('a#js-zoomingLinkGallery').attr('href');
+    result.vatInfo = $('.price-highlight.price-name').text();
 
     Apify.pushData(result)
 };
